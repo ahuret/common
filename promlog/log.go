@@ -116,7 +116,7 @@ type Config struct {
 
 // New returns a new leveled oklog logger. Each logged line will be annotated
 // with a timestamp. The output always goes to stderr.
-func New(config *Config) log.Logger {
+func New(config *Config) *logger {
 	var l log.Logger
 	if config.Format != nil && config.Format.s == "json" {
 		l = log.NewJSONLogger(log.NewSyncWriter(os.Stderr))
