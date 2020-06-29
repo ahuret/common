@@ -35,6 +35,30 @@ var (
 	)
 )
 
+type logger struct {
+	log.Logger
+	debug log.Logger
+	info  log.Logger
+	warn  log.Logger
+	err   log.Logger
+}
+
+func (l *logger) Debug(keyvals ...interface{}) {
+	l.debug.Log(keyvals...)
+}
+
+func (l *logger) Info(keyvals ...interface{}) {
+	l.info.Log(keyvals...)
+}
+
+func (l *logger) Warn(keyvals ...interface{}) {
+	l.warn.Log(keyvals...)
+}
+
+func (l *logger) Err(keyvals ...interface{}) {
+	l.err.Log(keyvals...)
+}
+
 // AllowedLevel is a settable identifier for the minimum level a log entry
 // must be have.
 type AllowedLevel struct {
@@ -104,5 +128,5 @@ func New(config *Config) log.Logger {
 		l = level.NewFilter(l, config.Level.o)
 	}
 	l = log.With(l, "ts", timestampFormat, "caller", log.DefaultCaller)
-	return l
+	return &logger{Logger: l, debug: level.Debug(l), info: level.Info(l), warn: level.Warn(l), err: level.Error(l)}
 }
